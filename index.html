@@ -308,25 +308,101 @@
       border: 1px solid #ccc;
       border-radius: 8px;
     }
-
+.menu-btn {
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  margin-right: 10px;
+}
     /* MOBILE */
-    @media(max-width: 700px) {
-      .sidebar {
-        width: 220px;
-      }
+   @media (max-width: 700px) {
+.menu-btn {
+  display: inline-block;
+}
+  .app {
+    height: 100dvh;
+  }
 
-      .suggestions {
-        grid-template-columns: 1fr;
-      }
+  .sidebar {
+    position: fixed;
+    left: -280px;
+    .sidebar.open {
+    left: 0;
+}
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 200;
+    transition: left 0.25s ease;
+  }
 
-      .welcome h1 {
-        font-size: 25px;
-      }
+  .sidebar.open {
+    left: 0;
+  }
 
-      .settings-panel {
-        width: 90%;
-      }
-    }
+  .main {
+    width: 100%;
+  }
+
+  .topbar {
+    padding: 16px 18px;
+    font-size: 17px;
+  }
+
+  .welcome {
+    padding: 35px 15px 110px;
+  }
+
+  .welcome h1 {
+    font-size: 25px;
+  }
+
+  .welcome p {
+    font-size: 14px;
+  }
+
+  .suggestions {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .suggestion {
+    padding: 16px;
+  }
+
+  .messages {
+    padding: 15px 10px 100px;
+  }
+
+  .message {
+    max-width: 90%;
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  .input-area {
+    bottom: 10px;
+    padding: 0 10px;
+  }
+
+  .input-box {
+    border-radius: 12px;
+  }
+
+  .input-box input {
+    min-width: 0;
+    font-size: 15px;
+  }
+
+  .settings-panel {
+    width: 90%;
+    max-width: 360px;
+  }
+
+}
   </style>
 </head>
 
@@ -368,8 +444,9 @@
   <main class="main">
 
     <div class="topbar">
-      LISTEN
-    </div>
+  <button id="menuBtn" class="menu-btn">☰</button>
+  LISTEN
+</div>
 
     <!-- WELCOME SCREEN -->
     <section class="welcome" id="welcome">
@@ -786,7 +863,12 @@ function renderChatList() {
     }
 
   });
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.querySelector(".sidebar");
 
+menuBtn.addEventListener("click", function () {
+    sidebar.classList.toggle("open");
+});
 </script>
 
 </body>
