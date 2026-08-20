@@ -693,24 +693,54 @@
      CHAT LIST
   ========================= */
 
-  function updateChatList(title) {
+function updateChatList(title) {
 
-    if (chats.length === 0) {
+  chats.unshift({
+    title: title,
+    messages: [...currentChat]
+  });
 
-      chatList.innerHTML = "";
+  renderChatList();
+}
 
-    }
 
-    chats.unshift({
-      title: title
+function renderChatList() {
+
+  chatList.innerHTML = "";
+
+  chats.forEach(function(chat) {
+
+    const item = document.createElement("div");
+
+    item.className = "chat-item";
+
+    item.textContent = "💬 " + chat.title;
+
+    item.addEventListener("click", function() {
+
+      currentChat = [...chat.messages];
+
+      messages.innerHTML = "";
+
+      welcome.style.display = "none";
+      messages.style.display = "block";
+
+      currentChat.forEach(function(message) {
+
+        addMessage(message.text, message.role);
+
+      });
+
+      messageInput.value = "";
+      messageInput.focus();
+
     });
 
-    renderChatList();
+    chatList.appendChild(item);
 
-  }
+  });
 
-
-  function renderChatList() {
+} {
 
     chatList.innerHTML = "";
 
