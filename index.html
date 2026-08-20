@@ -460,15 +460,16 @@
   <div class="setting-row">
     <label>AI Response Style</label>
 
-    <select>
-      <option>Balanced</option>
-      <option>Creative</option>
-      <option>Precise</option>
+    <select id="responseStyle">
+      <option value="balanced">Balanced</option>
+      <option value="creative">Creative</option>
+      <option value="precise">Precise</option>
     </select>
   </div>
 
   <div class="setting-row">
     <label>About LISTEN</label>
+
     <p style="color:#777;font-size:14px;">
       LISTEN — your universal AI assistant.
     </p>
@@ -565,16 +566,32 @@
     messageInput.value = "";
 
     /*
-      Temporary AI response.
-      Later we can connect this to Gemini/OpenAI API.
+      Send the user's message to our API.
+      The API will communicate with OpenRouter.
     */
 
-    setTimeout(function() {
+    fetch("/api/chat", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        message: text
+      })
+    })
+
+    .then(function(response) {
+      return response.json();
+    })
+
+    .then(function(data) {
 
       const reply =
-        "I'm LISTEN. I received your message: \"" +
-        text +
-        "\"";
+        data.reply ||
+        data.error ||
+        "No response received.";
 
       addMessage(reply, "ai");
 
@@ -585,7 +602,23 @@
 
       updateChatList(text);
 
-    }, 500);
+    })
+
+    .catch(function(error) {
+
+      console.error("Chat API error:", error);
+
+      const errorMessage =
+        "Sorry, something went wrong. Please try again.";
+
+      addMessage(errorMessage, "ai");
+
+      currentChat.push({
+        role: "ai",
+        text: errorMessage
+      });
+
+    });
 
   }
 
@@ -681,7 +714,7 @@
 
     chatList.innerHTML = "";
 
-    chats.forEach(function(chat, index) {
+    chats.forEach(function(chat) {
 
       const item = document.createElement("div");
 
